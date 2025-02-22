@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mealtrix - Day</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-900 text-gray-200">
+  <div class="container mx-auto p-4 max-w-4xl">
+    <h1 class="text-2xl font-bold text-blue-400 mb-4 text-center">Mealtrix - {{date}}</h1>
+
+    <h2 class="text-xl font-semibold text-blue-300">Add or Select Food Item</h2>
+    <form class="mt-2" method="POST" action="{{ url_for('view', date= '20250105') }}">
+      <label for="food-item" class="block font-medium">Select Food Item:</label>
+      <select id="food-item" name="food-item" class="border border-blue-400 rounded-md p-2 bg-gray-800 text-gray-200 mb-4">
+        {% for food in food_results%}
+        <option value={{food.id}}>{{food.name}}</option>
+        <!--<option value="chicken">Chicken</option>-->
+        {% endfor %}
+      </select>
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Add</button>
+    </form>
+
+    <div class="mt-6">
+      <h2 class="text-lg font-semibold text-blue-300">Consumed Foods</h2>
+      <div class="space-y-4 mt-2">
+        {% for food in log_results %}
+        <div class="border border-blue-500 rounded-lg p-4 bg-gray-800 shadow-sm">
+          <h3 class="text-blue-400 font-bold">{{ food.name }}</h3>
+          <p>Protein: <span class="text-green-400 font-semibold">{{ food.protein }}g</span></p>
+          <p>Carbohydrates: <span class="text-yellow-400 font-semibold">{{ food.carbohydrates }}g</span></p>
+          <p>Fat: <span class="text-red-400 font-semibold">{{ food.fat }}g</span></p>
+          <p>Calories: <span class="text-blue-300 font-semibold">{{ food.calories }} kcal</span></p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="mt-6 border border-blue-500 rounded-lg p-4 bg-gray-800 shadow-sm">
+      <h2 class="text-lg font-semibold text-blue-300">Total for the Day</h2>
+      <p>Proteins: <span class="text-green-400 font-semibold">{{ totals.protein }}g</span></p>
+      <p>Carbohydrates: <span class="text-yellow-400 font-semibold">{{ totals.carbohydrates }}g</span></p>
+      <p>Fats: <span class="text-red-400 font-semibold">{{ totals.fat }}g</span></p>
+      <p>Total Calories: <span class="text-blue-300 font-semibold">{{ totals.calories }} kcal</span></p>
+    </div>
+
+  </div>
+</body>
+</html>
+
+    <!--<h2 class="text-xl font-semibold text-blue-300 mt-6">Consumed Food Items</h2>
+    <ul class="space-y-4">
+      <li class="border border-blue-500 rounded-lg p-4 bg-gray-800 shadow-sm">
+        <h3 class="text-lg font-semibold text-blue-400">Pizza</h3>
+        <p>Proteins: 20g, Carbohydrates: 80g, Fats: 30g</p>
+      </li>
+      <li class="border border-blue-500 rounded-lg p-4 bg-gray-800 shadow-sm">
+        <h3 class="text-lg font-semibold text-blue-400">Chicken</h3>
+        <p>Proteins: 30g, Carbohydrates: 5g, Fats: 10g</p>
+      </li>
+    </ul>
+
+    <div class="mt-6">
+      <h2 class="text-xl font-semibold text-blue-300">Total Nutrients</h2>
+      <p>Proteins: 50g, Carbohydrates: 85g, Fats: 40g</p>
+    </div>
+  </div>
+</body>
+</html>

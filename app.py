@@ -40,9 +40,37 @@ def index():
 
 
     return render_template('home.html', header_date=header_date)
-@app.route('/view')
-def view():
-    return render_template('day.html')
+@app.route('/<date>', methods=['GET', 'POST'])
+def view(date):
+    db=get_db()
+    cur = db.execute('select id, entry_date from log_date where entry_date=?', [date])
+    date_header= cur.fetchone()
+    
+    if request.method == 'POST':
+      
+       db.execute('insert into food_date (food_id, log_date_id) values (?, ?)', [request.form['food-item'], date_header['id']])
+       db.commit()
+
+    
+    #cur=db.execute('select entry_date from log_date where entry_date=?', [date])
+    #result=cur.fetchone()
+    d = datetime.strptime(str(date_header['entry_date']), '%Y%m%d')
+    date_result = datetime.strftime(d, '%B %d %Y')
+    food_cur = db.execute('select id, name from food')
+    food_results = food_cur.fetchall()
+    log_cur = db.execute('select food.name, food.protein, food.carbohydrates, food.fat, food.calories from log_date join food_date on food_date.log_date_id= log_date.id join food on food.id=food_date.food_id where log_date.entry_date=?', [date])
+    log_results = log_cur.fetchall()
+    totals = {}
+    totals['protein'] = 0
+    totals['carbohydrates'] = 0
+    totals['fat'] = 0
+    totals['calories'] = 0
+    for food in log_results:
+        totals['protein'] += food['protein']
+        totals['carbohydrates'] += food['carbohydrates']
+        totals['fat'] += food['fat']
+        totals['calories'] += food['calories']
+    return render_template('day.html', date=date_result, food_results=food_results, log_results=log_results, totals=totals)
 @app.route('/food', methods=['GET', 'POST'])
 def food():
     db = get_db()
